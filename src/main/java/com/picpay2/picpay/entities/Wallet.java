@@ -1,6 +1,8 @@
 package com.picpay2.picpay.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,5 +37,21 @@ public class Wallet {
       this.email = email;
       this.password = password;
       this.walletType = walletType;
+   }
+
+   public final boolean isTransferAllowedForWalletType() {
+      return this.walletType.equals(WalletType.Enum.USER.get());
+   }
+
+   public final boolean isBalanceEqualOrGreaterThan(BigDecimal value) {
+      return this.balance.doubleValue() >= value.doubleValue();
+   }
+
+   public final void debit(BigDecimal value) {
+      this.balance = this.balance.subtract(value);
+   }
+
+   public final void credit(BigDecimal value) {
+      this.balance = this.balance.add(value);
    }
 }
